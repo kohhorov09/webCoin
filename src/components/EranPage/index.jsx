@@ -29,6 +29,8 @@ export default function EranPage({
     return parseInt(localStorage.getItem("totalEarnedCoins")) || 0;
   });
 
+  const level = Math.floor(totalEarnedCoins / 100); // 📈 Level hisoblash
+
   // Skinni yuklash
   useEffect(() => {
     const skinId = localStorage.getItem("selectedSkin") || "default";
@@ -151,12 +153,22 @@ export default function EranPage({
             cursor: energy > 0 ? "pointer" : "not-allowed",
             opacity: energy > 0 ? 1 : 0.4,
             outline: "none",
+            WebkitTapHighlightColor: "transparent",
+            userSelect: "none",
+            touchAction: "manipulation",
           }}
         >
           <img
             src={selectedSkin}
             alt="Coin"
-            style={{ width: "250px", height: "250px", objectFit: "contain" }}
+            style={{
+              width: "250px",
+              height: "250px",
+              objectFit: "contain",
+              pointerEvents: "none",
+            }}
+            onContextMenu={(e) => e.preventDefault()}
+            draggable={false}
           />
         </button>
 
@@ -198,6 +210,8 @@ export default function EranPage({
           {energy} / {maxEnergy}
         </span>
       </div>
+
+      {/* 🧬 Level */}
 
       {/* Plus animatsiya */}
       <style>

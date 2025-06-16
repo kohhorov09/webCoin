@@ -8,6 +8,7 @@ import Ball from "./components/Ball";
 import Missions from "./components/Missions";
 import Accaunt from "./components/Accaunt";
 import defaultSkin from "./Img/img_1.png";
+import axios from "axios"; // 🔥 axios qo‘shildi
 
 function App() {
   const [selectedSkin, setSelectedSkin] = useState(defaultSkin);
@@ -32,8 +33,6 @@ function App() {
   const [rechargeAmount, setRechargeAmount] = useState(
     () => parseInt(localStorage.getItem("rechargeCount")) || 1
   );
-
-  // 🔁 Boostlar uchun count state
   const [boostX2Count, setBoostX2Count] = useState(
     () => parseInt(localStorage.getItem("boostX2Count")) || 0
   );
@@ -47,10 +46,22 @@ function App() {
     () => parseInt(localStorage.getItem("rechargeCount")) || 1
   );
   const [missions, setMissions] = useState([]);
-
-  // Bu sessionlik: faqat 10 sekund davomida ishlaydi (BoostX2 uchun)
   const [tapMultiplier, setTapMultiplier] = useState(1);
 
+  const [totalEarnedCoins, setTotalEarnedCoins] = useState(
+    () => parseInt(localStorage.getItem("totalEarnedCoins")) || 0
+  );
+
+  const level = Math.floor(totalEarnedCoins / 10000) + 1;
+  // ✅ Missiyalarni backenddan yuklab olish
+  useEffect(() => {
+    axios
+      .get("http://localhost:9090/missions")
+      .then((res) => setMissions(res.data))
+      .catch((err) => console.error("❌ Missiyalarni yuklashda xatolik:", err));
+  }, []);
+
+  // 🔄 Mahalliy saqlash (localStorage)
   useEffect(() => {
     localStorage.setItem("coins", coins);
     localStorage.setItem("clicks", clicks);
@@ -75,11 +86,6 @@ function App() {
     rechargeCount,
   ]);
 
-  const [totalEarnedCoins, setTotalEarnedCoins] = useState(
-    () => parseInt(localStorage.getItem("totalEarnedCoins")) || 0
-  );
-
-  const level = Math.floor(totalEarnedCoins / 10000);
   return (
     <div
       style={{
@@ -89,7 +95,12 @@ function App() {
       }}
     >
       <div style={{ padding: "2rem" }}>
-        <Ball coins={coins} boughtEnergy={boughtEnergy} level={level} />
+        <Ball
+          coins={coins}
+          boughtEnergy={boughtEnergy}
+          totalEarnedCoins={totalEarnedCoins}
+          level={level}
+        />
       </div>
       <div style={{ marginBottom: "70px" }}>
         <Routes>

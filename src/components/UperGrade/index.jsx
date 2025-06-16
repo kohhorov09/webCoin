@@ -47,12 +47,12 @@ export default function UperGrade({
   const skins = [
     { id: "default", name: "Classic", price: 0, img: img1 },
     { id: "gold", name: "Dollor", price: 1000, img: img2 },
-    { id: "diamond", name: "Diamond", price: 2500, img: img3 },
-    { id: "fire", name: "Fire", price: 3400, img: img4 },
-    { id: "ice", name: "Ton", price: 6600, img: img5 },
-    { id: "neon", name: "Neon", price: 7500, img: img6 },
-    { id: "toxic", name: "Bitc", price: 8700, img: img7 },
-    { id: "cyber", name: "Cyber", price: 11800, img: img9 },
+    { id: "diamond", name: "Diamond", price: 5000, img: img3 },
+    { id: "fire", name: "Fire", price: 5800, img: img4 },
+    { id: "ice", name: "Ton", price: 8900, img: img5 },
+    { id: "neon", name: "Neon", price: 9600, img: img6 },
+    { id: "toxic", name: "Bitc", price: 10100, img: img7 },
+    { id: "cyber", name: "Cyber", price: 14800, img: img9 },
   ];
 
   const [purchasedSkins, setPurchasedSkins] = useState(
@@ -161,34 +161,34 @@ export default function UperGrade({
   const boosters = [
     {
       name: "Boost X2",
-      cost: 500 * (boostX2Count + 1),
+      cost: 1000 * (boostX2Count + 1),
       icon: "🚀",
       onClick: handleBoostX2,
-      disabled: coins < 500 * (boostX2Count + 1) || boostActive,
+      disabled: coins < 1000 * (boostX2Count + 1) || boostActive,
       level: boostX2Count,
     },
     {
       name: "Multitap",
-      cost: 700 * (multitapCount + 1),
+      cost: 2000 * (multitapCount + 1),
       icon: "🖐️",
       onClick: handleMultitap,
-      disabled: coins < 700 * (multitapCount + 1),
+      disabled: coins < 2000 * (multitapCount + 1),
       level: multitapCount,
     },
     {
       name: "Energy Limit",
-      cost: 2000 * (energyLimitCount + 1),
+      cost: 4000 * (energyLimitCount + 1),
       icon: "🔋",
       onClick: handleEnergyLimit,
-      disabled: coins < 2000 * (energyLimitCount + 1),
+      disabled: coins < 4000 * (energyLimitCount + 1),
       level: energyLimitCount,
     },
     {
       name: "Recharging Speed",
-      cost: 3000 * (rechargeCount + 1),
+      cost: 5000 * (rechargeCount + 1),
       icon: "⚡",
       onClick: handleRechargeSpeed,
-      disabled: coins < 3000 * (rechargeCount + 1),
+      disabled: coins < 5000 * (rechargeCount + 1),
       level: rechargeCount,
     },
   ];

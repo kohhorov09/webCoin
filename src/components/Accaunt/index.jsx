@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { FaRegEyeSlash, FaRegEye } from "react-icons/fa";
 import Button from "@mui/material/Button";
 import Carusel from "../Carusel";
+import axios from "axios";
+
+const API_URL = "http://localhost:9090/missions";
 
 export default function AccountPage({
   missions,
@@ -33,10 +36,14 @@ export default function AccountPage({
       setIsAdmin(savedUser.isAdmin);
     }
 
-    const savedMissions = localStorage.getItem("missionsData");
-    if (savedMissions) {
-      setMissions(JSON.parse(savedMissions));
-    }
+    axios
+      .get(API_URL)
+      .then((res) => {
+        setMissions(res.data);
+      })
+      .catch((err) => {
+        console.error("🚫 Mission load error:", err);
+      });
   }, []);
 
   const handleLogin = () => {
@@ -74,29 +81,40 @@ export default function AccountPage({
     if (!isAdmin) return alert("❌ Faqat admin mission qo‘sha oladi");
 
     const newMission = {
-      id: Date.now(),
       title,
       url,
       type,
       price: parseInt(price),
     };
 
-    const updated = [...missions, newMission];
-    setMissions(updated);
-    localStorage.setItem("missionsData", JSON.stringify(updated));
-    setTitle("");
-    setUrl("");
-    setType("");
-    setPrice("");
+    axios
+      .post(API_URL, newMission)
+      .then((res) => {
+        const updated = [...missions, res.data];
+        setMissions(updated);
+        setTitle("");
+        setUrl("");
+        setType("");
+        setPrice("");
+      })
+      .catch((err) => {
+        console.error("❌ Add mission error:", err);
+      });
   };
 
   const handleDeleteMission = (id) => {
     const confirmed = window.confirm("Rostdan ham o‘chirishni xohlaysizmi?");
     if (!confirmed) return;
 
-    const updated = missions.filter((m) => m.id !== id);
-    setMissions(updated);
-    localStorage.setItem("missionsData", JSON.stringify(updated));
+    axios
+      .delete(`${API_URL}/${id}`)
+      .then(() => {
+        const updated = missions.filter((m) => m.id !== id);
+        setMissions(updated);
+      })
+      .catch((err) => {
+        console.error("❌ Delete error:", err);
+      });
   };
 
   const inputStyle = {
@@ -152,8 +170,8 @@ export default function AccountPage({
     missionItem: {
       display: "flex",
       justifyContent: "space-between",
-      backgroundColor: "#222", // oldingi: "#fff"
-      color: "#fff", // matn rangi
+      backgroundColor: "#222",
+      color: "#fff",
       padding: "8px 12px",
       borderRadius: "6px",
       marginBottom: "6px",
@@ -178,7 +196,6 @@ export default function AccountPage({
           {!userEmail ? (
             <div style={styles.centered}>
               <p>Connect with Email to continue</p>
-
               <input
                 type="text"
                 placeholder="Email write"
@@ -186,7 +203,6 @@ export default function AccountPage({
                 onChange={(e) => setEmailInput(e.target.value)}
                 style={inputStyle}
               />
-
               <div style={{ position: "relative", width: "100%" }}>
                 <input
                   type={showPassword ? "text" : "password"}
@@ -202,7 +218,6 @@ export default function AccountPage({
                   {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
                 </span>
               </div>
-
               <Button onClick={handleLogin} variant="outlined">
                 <h5>Email Continue</h5>
               </Button>
@@ -215,7 +230,6 @@ export default function AccountPage({
               <Button onClick={handleLogout} variant="outlined" color="error">
                 Logout
               </Button>
-
               <input
                 placeholder="🎯 Mission Title"
                 value={title}
@@ -248,7 +262,6 @@ export default function AccountPage({
               <button onClick={handleAddMission} style={styles.button}>
                 ➕ Add Mission
               </button>
-
               <div style={{ marginTop: "1rem" }}>
                 <h4>📋 Existing Missions</h4>
                 {missions.length === 0 ? (
